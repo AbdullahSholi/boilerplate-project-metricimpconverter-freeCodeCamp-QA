@@ -3,33 +3,44 @@ function ConvertHandler() {
   this.getNum = function(input) {
     let result;
     
-    // Extract number part from input
-    let numMatch = input.match(/^[0-9]*\.?[0-9]*\/[0-9]*\.?[0-9]*|^[0-9]*\.?[0-9]*/);
+    // Extract number part from input (everything before letters)
+    let numMatch = input.match(/^[^a-zA-Z]*/);
     
     if (!numMatch || numMatch[0] === '') {
       result = 1; // Default to 1 if no number provided
     } else {
       let numStr = numMatch[0];
       
-      // Check for double fraction (invalid)
+      // Check for double fraction (invalid) - like 3/2/3
       if ((numStr.match(/\//g) || []).length > 1) {
+        return 'invalid number';
+      }
+      
+      // Check for invalid patterns like ending with /
+      if (numStr.endsWith('/') || numStr.startsWith('/')) {
         return 'invalid number';
       }
       
       // Handle fractions
       if (numStr.includes('/')) {
         let parts = numStr.split('/');
-        if (parts.length === 2 && parts[0] !== '' && parts[1] !== '' && parseFloat(parts[1]) !== 0) {
+        if (parts.length === 2 && parts[0] !== '' && parts[1] !== '' && 
+            !isNaN(parseFloat(parts[0])) && !isNaN(parseFloat(parts[1])) && 
+            parseFloat(parts[1]) !== 0) {
           result = parseFloat(parts[0]) / parseFloat(parts[1]);
         } else {
           return 'invalid number';
         }
       } else {
-        result = parseFloat(numStr);
-      }
-      
-      if (isNaN(result)) {
-        return 'invalid number';
+        // Handle regular numbers (integer or decimal)
+        if (numStr === '' || numStr === '.') {
+          result = 1;
+        } else {
+          result = parseFloat(numStr);
+          if (isNaN(result)) {
+            return 'invalid number';
+          }
+        }
       }
     }
     

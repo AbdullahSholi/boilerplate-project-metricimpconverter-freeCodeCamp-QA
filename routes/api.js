@@ -20,11 +20,11 @@ module.exports = function (app) {
     
     // Check for errors
     if (initNum === 'invalid number' && initUnit === 'invalid unit') {
-      return res.json({ error: 'invalid number and unit' });
+      return res.send('invalid number and unit');
     } else if (initNum === 'invalid number') {
-      return res.json({ error: 'invalid number' });
+      return res.send('invalid number');
     } else if (initUnit === 'invalid unit') {
-      return res.json({ error: 'invalid unit' });
+      return res.send('invalid unit');
     }
     
     // Get return unit and convert
