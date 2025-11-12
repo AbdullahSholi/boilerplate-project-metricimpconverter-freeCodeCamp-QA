@@ -8,34 +8,39 @@ module.exports = function (app) {
   let convertHandler = new ConvertHandler();
   
   app.get('/api/convert', (req, res) => {
-    const input = req.query.input;
-    
-    if (!input) {
-      return res.json({ error: 'no input provided' });
+    try {
+      const input = req.query.input;
+      
+      if (!input) {
+        return res.json({ error: 'no input provided' });
+      }
+      
+      const initNum = convertHandler.getNum(input);
+      const initUnit = convertHandler.getUnit(input);
+      
+      if (initNum === 'invalid number' && initUnit === 'invalid unit') {
+        return res.send('invalid number and unit');
+      } else if (initNum === 'invalid number') {
+        return res.send('invalid number');
+      } else if (initUnit === 'invalid unit') {
+        return res.send('invalid unit');
+      }
+      
+      const returnUnit = convertHandler.getReturnUnit(initUnit);
+      const returnNum = convertHandler.convert(initNum, initUnit);
+      const string = convertHandler.getString(initNum, initUnit, returnNum, returnUnit);
+      
+      res.json({
+        initNum: initNum,
+        initUnit: initUnit,
+        returnNum: returnNum,
+        returnUnit: returnUnit,
+        string: string
+      });
+    } catch (error) {
+      console.error('API Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-    
-    const initNum = convertHandler.getNum(input);
-    const initUnit = convertHandler.getUnit(input);
-    
-    if (initNum === 'invalid number' && initUnit === 'invalid unit') {
-      return res.send('invalid number and unit');
-    } else if (initNum === 'invalid number') {
-      return res.send('invalid number');
-    } else if (initUnit === 'invalid unit') {
-      return res.send('invalid unit');
-    }
-    
-    const returnUnit = convertHandler.getReturnUnit(initUnit);
-    const returnNum = convertHandler.convert(initNum, initUnit);
-    const string = convertHandler.getString(initNum, initUnit, returnNum, returnUnit);
-    
-    res.json({
-      initNum: initNum,
-      initUnit: initUnit,
-      returnNum: returnNum,
-      returnUnit: returnUnit,
-      string: string
-    });
   });
   
 };

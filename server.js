@@ -36,8 +36,10 @@ app.use(function(req, res, next) {
 
 const port = process.env.PORT || 3000;
 
-if (require.main === module) {
-  app.listen(port, function () {
+let server;
+
+function startServer() {
+  server = app.listen(port, function () {
     console.log("Listening on port " + port);
     if(process.env.NODE_ENV==='test') {
       console.log('Running Tests...');
@@ -50,7 +52,18 @@ if (require.main === module) {
         }
       }, 1500);
     }
+  }).on('error', function(err) {
+    if (err.code === 'EADDRINUSE') {
+      console.log('Port ' + port + ' is already in use');
+    } else {
+      console.error('Server error:', err);
+    }
   });
+  return server;
+}
+
+if (!module.parent || process.env.NODE_ENV === 'test') {
+  startServer();
 }
 
 module.exports = app;
