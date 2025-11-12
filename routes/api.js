@@ -14,11 +14,9 @@ module.exports = function (app) {
       return res.json({ error: 'no input provided' });
     }
     
-    // Get number and unit from input
     const initNum = convertHandler.getNum(input);
     const initUnit = convertHandler.getUnit(input);
     
-    // Check for errors
     if (initNum === 'invalid number' && initUnit === 'invalid unit') {
       return res.send('invalid number and unit');
     } else if (initNum === 'invalid number') {
@@ -27,12 +25,10 @@ module.exports = function (app) {
       return res.send('invalid unit');
     }
     
-    // Get return unit and convert
     const returnUnit = convertHandler.getReturnUnit(initUnit);
     const returnNum = convertHandler.convert(initNum, initUnit);
     const string = convertHandler.getString(initNum, initUnit, returnNum, returnUnit);
     
-    // Return the result
     res.json({
       initNum: initNum,
       initUnit: initUnit,

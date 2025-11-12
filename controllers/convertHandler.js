@@ -3,25 +3,21 @@ function ConvertHandler() {
   this.getNum = function(input) {
     let result;
     
-    // Extract number part from input (everything before letters)
     let numMatch = input.match(/^[^a-zA-Z]*/);
     
     if (!numMatch || numMatch[0] === '') {
-      result = 1; // Default to 1 if no number provided
+      result = 1;
     } else {
       let numStr = numMatch[0];
       
-      // Check for double fraction (invalid) - like 3/2/3
       if ((numStr.match(/\//g) || []).length > 1) {
         return 'invalid number';
       }
       
-      // Check for invalid patterns like ending with /
       if (numStr.endsWith('/') || numStr.startsWith('/')) {
         return 'invalid number';
       }
       
-      // Handle fractions
       if (numStr.includes('/')) {
         let parts = numStr.split('/');
         if (parts.length === 2 && parts[0] !== '' && parts[1] !== '' && 
@@ -32,7 +28,6 @@ function ConvertHandler() {
           return 'invalid number';
         }
       } else {
-        // Handle regular numbers (integer or decimal)
         if (numStr === '' || numStr === '.') {
           result = 1;
         } else {
@@ -50,7 +45,6 @@ function ConvertHandler() {
   this.getUnit = function(input) {
     let result;
     
-    // Extract unit part from input (everything after the number)
     let unitMatch = input.match(/[a-zA-Z]+$/);
     
     if (!unitMatch) {
@@ -59,11 +53,9 @@ function ConvertHandler() {
     
     let unit = unitMatch[0].toLowerCase();
     
-    // Valid units
     const validUnits = ['gal', 'l', 'mi', 'km', 'lbs', 'kg'];
     
     if (validUnits.includes(unit)) {
-      // Return 'L' in uppercase for liter, others in lowercase
       result = unit === 'l' ? 'L' : unit;
     } else {
       result = 'invalid unit';
@@ -135,7 +127,6 @@ function ConvertHandler() {
         result = null;
     }
     
-    // Round to 5 decimal places
     if (result !== null) {
       result = Math.round(result * 100000) / 100000;
     }
