@@ -10,14 +10,27 @@ function ConvertHandler() {
     } else {
       let numStr = numMatch[0];
       
+      // Check for invalid characters (letters and special chars except .-/)
+      if (/[a-zA-Z@#$%^&*()_+=\[\]{}|\\:";'<>?,`~]/.test(numStr)) {
+        return undefined;
+      }
+      
+      // Check for multiple decimal points first
+      if (numStr.includes('.') && (numStr.match(/\./g) || []).length > 1) {
+        return undefined;
+      }
+      
+      // Check for double fraction (invalid)
       if ((numStr.match(/\//g) || []).length > 1) {
         return undefined;
       }
       
-      if (numStr.endsWith('/') || numStr.startsWith('/')) {
+      // Check for invalid patterns like ending with / or starting with /
+      if (numStr.endsWith('/') || (numStr.startsWith('/') && !numStr.startsWith('-'))) {
         return undefined;
       }
       
+      // Handle fractions
       if (numStr.includes('/')) {
         let parts = numStr.split('/');
         if (parts.length === 2 && parts[0] !== '' && parts[1] !== '' && 
@@ -28,6 +41,7 @@ function ConvertHandler() {
           return undefined;
         }
       } else {
+        // Handle regular numbers (integer or decimal)
         if (numStr === '' || numStr === '.') {
           result = 1;
         } else {
@@ -44,6 +58,11 @@ function ConvertHandler() {
   
   this.getUnit = function(input) {
     let result;
+    
+    // Check if input contains spaces - if so, it's invalid
+    if (input.includes(' ')) {
+      return undefined;
+    }
     
     let unitMatch = input.match(/[a-zA-Z]+$/);
     
