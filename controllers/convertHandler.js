@@ -11,11 +11,11 @@ function ConvertHandler() {
       let numStr = numMatch[0];
       
       if ((numStr.match(/\//g) || []).length > 1) {
-        return 'invalid number';
+        return undefined;
       }
       
       if (numStr.endsWith('/') || numStr.startsWith('/')) {
-        return 'invalid number';
+        return undefined;
       }
       
       if (numStr.includes('/')) {
@@ -25,7 +25,7 @@ function ConvertHandler() {
             parseFloat(parts[1]) !== 0) {
           result = parseFloat(parts[0]) / parseFloat(parts[1]);
         } else {
-          return 'invalid number';
+          return undefined;
         }
       } else {
         if (numStr === '' || numStr === '.') {
@@ -33,7 +33,7 @@ function ConvertHandler() {
         } else {
           result = parseFloat(numStr);
           if (isNaN(result)) {
-            return 'invalid number';
+            return undefined;
           }
         }
       }
@@ -48,7 +48,7 @@ function ConvertHandler() {
     let unitMatch = input.match(/[a-zA-Z]+$/);
     
     if (!unitMatch) {
-      return 'invalid unit';
+      return undefined;
     }
     
     let unit = unitMatch[0].toLowerCase();
@@ -58,7 +58,7 @@ function ConvertHandler() {
     if (validUnits.includes(unit)) {
       result = unit === 'l' ? 'L' : unit;
     } else {
-      result = 'invalid unit';
+      result = undefined;
     }
     
     return result;

@@ -18,11 +18,11 @@ module.exports = function (app) {
       const initNum = convertHandler.getNum(input);
       const initUnit = convertHandler.getUnit(input);
       
-      if (initNum === 'invalid number' && initUnit === 'invalid unit') {
+      if ((initNum === undefined || initNum === 'invalid number') && (initUnit === undefined || initUnit === 'invalid unit')) {
         return res.send('invalid number and unit');
-      } else if (initNum === 'invalid number') {
+      } else if (initNum === undefined || initNum === 'invalid number') {
         return res.send('invalid number');
-      } else if (initUnit === 'invalid unit') {
+      } else if (initUnit === undefined || initUnit === 'invalid unit') {
         return res.send('invalid unit');
       }
       
